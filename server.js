@@ -4,9 +4,9 @@ var port = process.env.PORT || 1337;
 //var conString = process.env.ELEPHANTSQL_URL || "postgres://upgrttzu:C3tQeW5md3dcsQoxaFhr513dxCzYXxsc@fizzy-cherry.db.elephantsql.com:5432/upgrttzu";
 http.createServer(function(req, res) {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('UnBrickable biatches! WOOP WOOP\n');
+  res.end('UnBrickable biatches! WOOP WOOP lolcats\n');
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Meer tekst\n');
+  res.end('Meer tekst\n');	
 }).listen(port);
 
 
