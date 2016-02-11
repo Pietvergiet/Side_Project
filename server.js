@@ -2,6 +2,8 @@
 var http = require('http');
 var dispatcher = require('httpdispatcher');
 var pg = require('pg');
+//var _ = require('underscore');
+//var async = require('async');
 //Lets define a port we want to listen to
 //const PORT=1337; 
 
@@ -15,13 +17,14 @@ var server = http.createServer(handleRequest);
 var port = process.env.PORT || 1337;
 var conString = process.env.ELEPHANTSQL_URL || "postgres://upgrttzu:C3tQeW5md3dcsQoxaFhr513dxCzYXxsc@fizzy-cherry.db.elephantsql.com:5432/upgrttzu";
 //var conString = process.env.ELEPHANTSQL_URL || "postgres://postgres:Runner1!@localhost:5432/postgres";
-var client = new pg.Client(conString);
+
 //Lets start our server
 server.listen(port, function(){
     //Callback triggered when server is successfully listening. Hurray!
     console.log("Server listening on: http://localhost:%s", port);
 });
-var names = [];
+var names = '';
+
 /*http.createServer(function (req, res) {
   var html = buildHtml(req);
 
@@ -55,10 +58,10 @@ function handleRequest(req, res){
         console.log(err);
     }
 }
-function getComment(name) {
-  var rComment;
-  var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \''+name+'\'';
-  console.log(rQuery);
+
+dispatcher.onGet("/Frank", function(req, res) {
+  var client = new pg.Client(conString);
+    var rQuery = 'SELECT "Comments" AS comment FROM test WHERE "Name" = \''+req.url.substring(1)+'\'';
     client.connect(function(err) {
     if(err) {
       console.error('could not connect to postgres', err)
@@ -75,56 +78,182 @@ function getComment(name) {
     
     client.query(rQuery , function(err, result) {
       if(err) {
-          return console.error('error running query', err);
+          console.error('error running query', err)
+          return 'Niet beschikbaar';
       }
-      rComment = result.rows[0].comment;
-      console.log(rComment);
+      var reComment = result.rows[0].comment;
+      console.log('infunction1' + reComment);
+       res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
+    res.write('<p>The comment of Frank is: ' + reComment+'</p>');
+    res.end('</body></html>');
       //res.write('The comment of ' + req.url.substring(1) + ' is: ' + rComment);
       //res.end("DONE");
       //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
       client.end();
       });
     });
-  return rComment;
-}
-dispatcher.onGet("/Frank", function(req, res) {
-  res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
-  var comment = getComment('Frank');
-  res.write('<p>The comment of Frank is: ' + comment+'</p>');
-  res.end('</body></html>');
+    //var comment = getComment('Frank');
+    //console.log('11' +comment);
+   
+    console.log('22' + names);
+    
+  
 });
 dispatcher.onGet("/Pietvergiet", function(req, res) {
-  res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
-  var comment = getComment('Pietvergiet');
-  res.write('<p>The comment of Pietvergiet is: ' + comment+'</p>');
-  res.end('</body></html>');
+  var client = new pg.Client(conString);
+    var rQuery = 'SELECT "Comments" AS comment FROM test WHERE "Name" = \''+req.url.substring(1)+'\'';
+    client.connect(function(err) {
+    if(err) {
+      console.error('could not connect to postgres', err)
+      return 'Niet beschikbaar';
+    }
+    /*var query = client.query('SELECT "Name" FROM test WHERE id=1');
+    query.on('row', function(err, row) {
+      if(err) {
+          return console.error('error running query', err);
+      }
+      console.log('Name: %s', row);
+    });*/
+    //var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \'' + req.url.substring(1)+ '\'';
+    
+    client.query(rQuery , function(err, result) {
+      if(err) {
+          console.error('error running query', err)
+          return 'Niet beschikbaar';
+      }
+      var reComment = result.rows[0].comment;
+      console.log('infunction1' + reComment);
+      res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
+      //var comment = getComment('Pietvergiet');
+      res.write('<p>The comment of Pietvergiet is: ' + reComment+'</p>');
+      res.end('</body></html>');
+      //res.write('The comment of ' + req.url.substring(1) + ' is: ' + rComment);
+      //res.end("DONE");
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+      });
+    });
+  
 });
 dispatcher.onGet("/Joert", function(req, res) {
-  res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
-  var comment = getComment('Joert');
-  res.write('<p>The comment of Joert is: ' + comment+'</p>');
+  var client = new pg.Client(conString);
+  var rQuery = 'SELECT "Comments" AS comment FROM test WHERE "Name" = \''+req.url.substring(1)+'\'';
+  client.connect(function(err) {
+    if(err) {
+      console.error('could not connect to postgres', err)
+      return 'Niet beschikbaar';
+    }
+    /*var query = client.query('SELECT "Name" FROM test WHERE id=1');
+    query.on('row', function(err, row) {
+      if(err) {
+          return console.error('error running query', err);
+      }
+      console.log('Name: %s', row);
+    });*/
+    //var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \'' + req.url.substring(1)+ '\'';
+    
+    client.query(rQuery , function(err, result) {
+      if(err) {
+          console.error('error running query', err)
+          return 'Niet beschikbaar';
+      }
+      var reComment = result.rows[0].comment;
+      console.log('infunction1' + reComment);
+      res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
+  //var comment = getComment('Joert');
+  res.write('<p>The comment of Joert is: ' + reComment+'</p>');
   res.end('</body></html>');
+      //res.write('The comment of ' + req.url.substring(1) + ' is: ' + rComment);
+      //res.end("DONE");
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+      });
+    });
+  
+  
 });
 dispatcher.onGet("/Æde", function(req, res) {
-  res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
-  var comment = getComment('Æde');
-  res.write('<p>The comment of Æde is: ' + comment+'</p>');
+  var client = new pg.Client(conString);
+  var rQuery = 'SELECT "Comments" AS comment FROM test WHERE "Name" = \''+req.url.substring(1)+'\'';
+  client.connect(function(err) {
+    if(err) {
+      console.error('could not connect to postgres', err)
+      return 'Niet beschikbaar';
+    }
+    /*var query = client.query('SELECT "Name" FROM test WHERE id=1');
+    query.on('row', function(err, row) {
+      if(err) {
+          return console.error('error running query', err);
+      }
+      console.log('Name: %s', row);
+    });*/
+    //var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \'' + req.url.substring(1)+ '\'';
+    
+    client.query(rQuery , function(err, result) {
+      if(err) {
+          console.error('error running query', err)
+          return 'Niet beschikbaar';
+      }
+      var reComment = result.rows[0].comment;
+      console.log('infunction1' + reComment);
+        
+      //res.write('The comment of ' + req.url.substring(1) + ' is: ' + rComment);
+      //res.end("DONE");
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+      });
+    });
+    res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
+  //var comment = getComment('Æde');
+  res.write('<p>Æ letter is stom dus hier kan niet op gequeriet worden. :( /(o~o)\\ </p>');
   res.end('</body></html>');
+
 });
 dispatcher.onGet("/Karel", function(req, res) {
-  res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
-  var comment = getComment('Karel');
-  res.write('<p>The comment of Karel is: ' + comment+'</p>');
+  var client = new pg.Client(conString);
+  var rQuery = 'SELECT "Comments" AS comment FROM test WHERE "Name" = \''+req.url.substring(1)+'\'';
+  client.connect(function(err) {
+    if(err) {
+      console.error('could not connect to postgres', err)
+      return 'Niet beschikbaar';
+    }
+    /*var query = client.query('SELECT "Name" FROM test WHERE id=1');
+    query.on('row', function(err, row) {
+      if(err) {
+          return console.error('error running query', err);
+      }
+      console.log('Name: %s', row);
+    });*/
+    //var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \'' + req.url.substring(1)+ '\'';
+    
+    client.query(rQuery , function(err, result) {
+      if(err) {
+          console.error('error running query', err)
+          return 'Niet beschikbaar';
+      }
+      var reComment = result.rows[0].comment;
+      console.log('infunction1' + reComment);
+       res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
+  //var comment = getComment('Karel');
+  res.write('<p>The comment of Karel is: ' + reComment+'</p>');
   res.end('</body></html>');
+      //res.write('The comment of ' + req.url.substring(1) + ' is: ' + rComment);
+      //res.end("DONE");
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+      });
+    });
+ 
 });
 //A sample GET request    
 dispatcher.onGet("/page1", function(req, res) {
-	res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
+  var client = new pg.Client(conString);
+  res.write('<!DOCTYPE html><html><head><title>TESTJONGUH</title><meta charset="utf-8" /></head><body>');
   //res.writeHead(200, {'Content-Type': 'text/plain'});
-	client.connect(function(err) {
-  		if(err) {
-    		return console.error('could not connect to postgres', err);
-  		}
+  client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
+      }
       /*var query = client.query('SELECT "Name" FROM test WHERE id=1');
       query.on('row', function(err, row) {
         if(err) {
@@ -132,12 +261,12 @@ dispatcher.onGet("/page1", function(req, res) {
         }
         console.log('Name: %s', row);
       });*/
-  		client.query('SELECT "Name" AS names FROM test', function(err, result) {
-	    	if(err) {
-	      		return console.error('error running query', err);
-	    	}
+      client.query('SELECT "Name" AS names FROM test', function(err, result) {
+        if(err) {
+            return console.error('error running query', err);
+        }
         var rLength = result.rows.length;
-		    console.log(result.rows[0]);
+        console.log(result.rows[0]);
         var qResults = [];
         for(var i = 0; i < rLength; i++) {
           qResults.push(result.rows[i].names);
@@ -149,11 +278,11 @@ dispatcher.onGet("/page1", function(req, res) {
           res.write('</a><br/>');
         }
         res.end('</body></html>');
-		    //res.end("DONE");
-		    //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
-	    client.end();
-  		});
-	});
+        //res.end("DONE");
+        //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+      });
+  });
     
 });    
 
@@ -163,4 +292,38 @@ dispatcher.onPost("/post1", function(req, res) {
     res.end('Got Post Data');
 });
 
+function getComment(name) {
+  var rComment = '';
+  var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \''+name+'\'';
+  console.log(rQuery);
+  client.connect(function(err) {
+    if(err) {
+      console.error('could not connect to postgres', err)
+      return 'Niet beschikbaar';
+    }
+    /*var query = client.query('SELECT "Name" FROM test WHERE id=1');
+    query.on('row', function(err, row) {
+      if(err) {
+          return console.error('error running query', err);
+      }
+      console.log('Name: %s', row);
+    });*/
+    //var rQuery = 'SELECT "Comment" AS comment FROM test WHERE "Name" = \'' + req.url.substring(1)+ '\'';
+    
+    client.query(rQuery , function(err, result) {
+      if(err) {
+          console.error('error running query', err)
+          return 'Niet beschikbaar';
+      }
+      var reComment = result.rows[0].comment;
+      console.log('infunction1' + reComment);
+      //res.write('The comment of ' + req.url.substring(1) + ' is: ' + rComment);
+      //res.end("DONE");
+      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+      client.end();
+      });
+    });
+  console.log('infunction2' + rComment);
+  return rComment;
+}
 
